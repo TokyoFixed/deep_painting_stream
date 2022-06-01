@@ -1,3 +1,27 @@
+
+### GCP configuration - - - - - - - - - - - - - - - - - - -
+
+# /!\ you should fill these according to your account
+
+### GCP Project - - - - - - - - - - - - - - - - - - - - - -
+
+# not required here
+
+### GCP Storage - - - - - - - - - - - - - - - - - - - - - -
+
+BUCKET_NAME=wagon-data-859-battenfelder
+
+
+
+
+
+
+
+
+
+
+
+
 # ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
