@@ -20,7 +20,7 @@ yapf
 # API
 gcsfs
 google-cloud-storage
-mlflow
+
 s3fs
 
 # utilities
@@ -30,3 +30,4 @@ memoized-property
 termcolor
 
 streamlit
+plotly
