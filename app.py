@@ -169,8 +169,8 @@ def rand_image_ukiyoe():
 
 def random_movement():
     movement_array = {'High Renaissance':rand_image_highren(),'Impressionism':rand_image_impress(),'Northern Renaissance':rand_image_northren(),'Post Impressionism':rand_image_postimpressn(),'Rococo':rand_image_rococo(),'Ukiyo-e':rand_image_ukiyoe()}
-    random_entry = random.choice(list(movement_array.items()))
-    return random_entry
+    random_entry = random.choice(list(movement_array.keys()))
+    return (movement_array[random_entry], random_entry)
 
 #Opens and displays the image
 def get_opened_image(image):
@@ -205,7 +205,7 @@ st.image([rand_image_highren(),
           rand_image_postimpressn(),
           rand_image_rococo(),
           rand_image_ukiyoe()],
-         width = 200,
+         width = 233,
          caption=['High Renaissance',
                   'Impressionism',
                   'Northern Renaissance',
@@ -241,28 +241,29 @@ if image_file:
 
     st.markdown(f'<h2 style="font-size:30px;">{"Results:"}</h2>',
                 unsafe_allow_html=True)
-    st.markdown(f'<h2 style="font-size:30px;margin-bottom:-35px">{f"The Deep Painting App classifies this image as {predicted_movement} ."}</h2>',
+    st.markdown(f'<h2 style="font-size:30px;margin-bottom:20px">{f"The Deep Painting App classifies this image as {predicted_movement} ."}</h2>',
                 unsafe_allow_html=True)
 
-    fig = px.bar(api_df, x='Confidence', y='Movement',orientation='h', color = 'Movement')
-    fig.update_layout(showlegend=False)
-    fig.update_xaxes(visible = False)
-    st.plotly_chart(fig)
+    with st. expander('Classification Probabilities', expanded = False):
+        fig = px.bar(api_df, x='Confidence', y='Movement',orientation='h', color = 'Movement')
+        fig.update_layout(showlegend=False)
+        fig.update_xaxes(visible = False)
+        st.plotly_chart(fig)
 
 
 
 
 
 #THE GUESSING GAME
-rand_move, rand_img = random_movement()
-if 'random_image' not in st.session_state:
 
-    st.session_state['random_image'] = rand_img#random_painting(path)
+if 'random_image' not in st.session_state:
+#    rand_move, rand_img = random_movement()
+    st.session_state['random_image'] = random_movement()#random_painting(path)
     #st.session_state['random_image_move'] = rand_move#random_painting(path)
     print("Init")
 
 def form2_callback():
-    st.session_state['random_image'] = rand_img#random_painting(path)
+    st.session_state['random_image'] = random_movement()#random_painting(path)
     print("callback")
 
 with st.sidebar:
@@ -271,17 +272,13 @@ with st.sidebar:
 
     st.title('Guess the Movement')
 
-    #rand_move, rand_img = random_movement()
-    st.image(st.session_state['random_image'], use_column_width=True)
 
-    # fig, ax = plt.subplots()
-    # ax.imshow(st.session_state['random_image'][0]/255)
-    # ax.set_axis_off()
-    # st.pyplot(fig)
+    img_test = (st.session_state['random_image'][0])
+    st.image(img_test, use_column_width=True)
 
-    #label = st.session_state['random_image_move']#[1]
-    #label = equal_text(label)
-    label = rand_move
+
+    label = st.session_state['random_image'][1]
+
 
     with st.form(key ='Form1'):
         movement = st.radio("What do you think?",
@@ -296,5 +293,5 @@ with st.sidebar:
         else:
             st.write(f'Ooops! It was {label} .')
 
-        #with st.form(key = 'Form2'):
+
         btn = st.button("Next", on_click= form2_callback)
