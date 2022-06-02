@@ -3,7 +3,7 @@
 import streamlit as st
 from PIL import Image
 import matplotlib.pyplot as plt
-from utils import head, set_bg, equal_text, body, example, about, explanation_of_movements, transform_output
+from utils_bb import head, set_bg, equal_text, body, example, about, explanation_of_movements, transform_output
 #from tensorflow.keras.preprocessing import image_dataset_from_directory
 #from deep_painting_app.explore_data import random_painting, pick_up_one_painting_per_class
 #from deep_painting_app.data_processing import load_and_divide_dataset, classes_names_to_dict, give_class_name
@@ -120,49 +120,49 @@ def pick_up_one_painting_per_class(path, img_height=180, img_width=180):
     return paintings_per_class
 
 def rand_image_highren():
-    files = os.listdir("../raw_data/orgImg_small/High Renaissance/")
+    files = os.listdir("./raw_data/orgImg_small/High Renaissance/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/High Renaissance/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/High Renaissance/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
 
 def rand_image_impress():
-    files = os.listdir("../raw_data/orgImg_small/Impressionism/")
+    files = os.listdir("./raw_data/orgImg_small/Impressionism/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Impressionism/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/Impressionism/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
 
 def rand_image_northren():
-    files = os.listdir("../raw_data/orgImg_small/Northern Renaissance/")
+    files = os.listdir("./raw_data/orgImg_small/Northern Renaissance/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Northern Renaissance/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/Northern Renaissance/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
 
 def rand_image_postimpressn():
-    files = os.listdir("../raw_data/orgImg_small/Post Impressionism/")
+    files = os.listdir("./raw_data/orgImg_small/Post Impressionism/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Post Impressionism/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/Post Impressionism/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
 
 def rand_image_rococo():
-    files = os.listdir("../raw_data/orgImg_small/Rococo/")
+    files = os.listdir("./raw_data/orgImg_small/Rococo/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Rococo/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/Rococo/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
 
 def rand_image_ukiyoe():
-    files = os.listdir("../raw_data/orgImg_small/Ukiyo-e/")
+    files = os.listdir("./raw_data/orgImg_small/Ukiyo-e/")
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Ukiyo-e/{d}"
+    path_of_rand_image = f"./raw_data/orgImg_small/Ukiyo-e/{d}"
     img = Image.open(path_of_rand_image)
     img = img.resize((125, 125))
     return img
@@ -186,7 +186,7 @@ head()
 #Shows examples of images for each class
 example()
 
-path = '../raw_data/orgImg_small'
+path = './raw_data/orgImg_small'
 # imgs = pick_up_one_painting_per_class(path)
 # figure, axs = plt.subplots(1, 6, figsize=(20,20))
 # i = 0

@@ -1,1 +1,1 @@
- web: sh setup.sh && streamlit run --pythonpath deep_painting_stream app.py
+ web: sh setup.sh && streamlit run app.py
