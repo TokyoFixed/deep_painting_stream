@@ -1,10 +1,9 @@
 #Import Libraries
-#from turtle import width
 import streamlit as st
 from PIL import Image
 import matplotlib.pyplot as plt
 from utils import head, set_bg, equal_text, body, example, about, explanation_of_movements, transform_output
-#from tensorflow.keras.preprocessing import image_dataset_from_directory
+from tensorflow.keras.preprocessing import image_dataset_from_directory
 #from deep_painting_app.explore_data import random_painting, pick_up_one_painting_per_class
 #from deep_painting_app.data_processing import load_and_divide_dataset, classes_names_to_dict, give_class_name
 import requests
@@ -119,58 +118,11 @@ def pick_up_one_painting_per_class(path, img_height=180, img_width=180):
                 break
     return paintings_per_class
 
-def rand_image_highren():
-    files = os.listdir("../raw_data/orgImg_small/High Renaissance/")
+def rand_image_2(path):
+    files = os.listdir(path)
     d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/High Renaissance/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def rand_image_impress():
-    files = os.listdir("../raw_data/orgImg_small/Impressionism/")
-    d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Impressionism/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def rand_image_northren():
-    files = os.listdir("../raw_data/orgImg_small/Northern Renaissance/")
-    d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Northern Renaissance/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def rand_image_postimpressn():
-    files = os.listdir("../raw_data/orgImg_small/Post Impressionism/")
-    d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Post Impressionism/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def rand_image_rococo():
-    files = os.listdir("../raw_data/orgImg_small/Rococo/")
-    d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Rococo/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def rand_image_ukiyoe():
-    files = os.listdir("../raw_data/orgImg_small/Ukiyo-e/")
-    d = random.choice(files)
-    path_of_rand_image = f"../raw_data/orgImg_small/Ukiyo-e/{d}"
-    img = Image.open(path_of_rand_image)
-    img = img.resize((125, 125))
-    return img
-
-def random_movement():
-    movement_array = {'High Renaissance':rand_image_highren(),'Impressionism':rand_image_impress(),'Northern Renaissance':rand_image_northren(),'Post Impressionism':rand_image_postimpressn(),'Rococo':rand_image_rococo(),'Ukiyo-e':rand_image_ukiyoe()}
-    random_entry = random.choice(list(movement_array.items()))
-    return random_entry
+    path_of_rand_image = f"../raw_data/orgImg_small/{d}"
+    return path_of_rand_image
 
 #Opens and displays the image
 def get_opened_image(image):
@@ -187,37 +139,16 @@ head()
 example()
 
 path = '../raw_data/orgImg_small'
-# imgs = pick_up_one_painting_per_class(path)
-# figure, axs = plt.subplots(1, 6, figsize=(20,20))
-# i = 0
-
-# for cl in imgs:
-#     axs[i].imshow(imgs[cl]/255)
-#     axs[i].set_title(equal_text(cl))
-#     axs[i].set_axis_off()
-#     i += 1
-# st.pyplot(figure)
-
-#st.image(caption = 'test', rand_image_highren(), caption = 'test',use_column_width=200)
-st.image([rand_image_highren(),
-          rand_image_impress(),
-          rand_image_northren(),
-          rand_image_postimpressn(),
-          rand_image_rococo(),
-          rand_image_ukiyoe()],
-         width = 200,
-         caption=['High Renaissance',
-                  'Impressionism',
-                  'Northern Renaissance',
-                  'Post Impressionism',
-                  'Rococo',
-                  'Ukiyo-e'])
-
-
-
-
+imgs = pick_up_one_painting_per_class(path)
+figure, axs = plt.subplots(1, 6, figsize=(20,20))
+i = 0
+for cl in imgs:
+    axs[i].imshow(imgs[cl]/255)
+    axs[i].set_title(equal_text(cl))
+    axs[i].set_axis_off()
+    i += 1
+st.pyplot(figure)
 explanation_of_movements()
-
 
 #Body
 body()
@@ -229,40 +160,32 @@ deep_painting_url = 'https://deeppainting3-ynhfw4pdza-an.a.run.app/predict/image
 
 if image_file:
     #Sets the image
-
+    st.markdown(f'<h2 style="font-size:30px;">{"Results:"}</h2>',
+                unsafe_allow_html=True)
     r = requests.post(url = deep_painting_url,files={'file':image_file})
     predicted_movement = r.json()['movement']
     predicted_probabilty = r.json()['confidence']
-
-    api_df = transform_output(r.json())
-    image = get_opened_image(image_file)
-    with st.expander("Selected Image", expanded = True):
-        st.image(image, use_column_width = True)
-
-    st.markdown(f'<h2 style="font-size:30px;">{"Results:"}</h2>',
-                unsafe_allow_html=True)
     st.markdown(f'<h2 style="font-size:30px;margin-bottom:-35px">{f"The Deep Painting App classifies this image as {predicted_movement} ."}</h2>',
                 unsafe_allow_html=True)
-
+    api_df = transform_output(r.json())
     fig = px.bar(api_df, x='Confidence', y='Movement',orientation='h', color = 'Movement')
     fig.update_layout(showlegend=False)
     fig.update_xaxes(visible = False)
     st.plotly_chart(fig)
-
+    image = get_opened_image(image_file)
+    with st.expander("Selected Image", expanded = True):
+        st.image(image, use_column_width = True)
 
 
 
 
 #THE GUESSING GAME
-rand_move, rand_img = random_movement()
 if 'random_image' not in st.session_state:
-
-    st.session_state['random_image'] = rand_img#random_painting(path)
-    #st.session_state['random_image_move'] = rand_move#random_painting(path)
+    st.session_state['random_image'] = random_painting(path)
     print("Init")
 
 def form2_callback():
-    st.session_state['random_image'] = rand_img#random_painting(path)
+    st.session_state['random_image'] = random_painting(path)
     print("callback")
 
 with st.sidebar:
@@ -270,18 +193,14 @@ with st.sidebar:
         about()
 
     st.title('Guess the Movement')
+    fig, ax = plt.subplots()
+    ax.imshow(st.session_state['random_image'][0]/255)
+    ax.set_axis_off()
+    st.pyplot(fig)
 
-    #rand_move, rand_img = random_movement()
-    st.image(st.session_state['random_image'], use_column_width=True)
+    label = st.session_state['random_image'][1]
+    label = equal_text(label)
 
-    # fig, ax = plt.subplots()
-    # ax.imshow(st.session_state['random_image'][0]/255)
-    # ax.set_axis_off()
-    # st.pyplot(fig)
-
-    #label = st.session_state['random_image_move']#[1]
-    #label = equal_text(label)
-    label = rand_move
 
     with st.form(key ='Form1'):
         movement = st.radio("What do you think?",
